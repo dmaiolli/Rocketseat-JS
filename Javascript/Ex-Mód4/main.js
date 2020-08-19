@@ -7,6 +7,7 @@ axios.get('https://api.github.com/users/dmaiolli')
     })
 
 
+
 function checaIdade(idade) {
     return new Promise( (resolve, reject) => {
         setTimeout(() => {
@@ -23,6 +24,7 @@ checaIdade(18)
 });
 
 
+
 var listElement = document.querySelector('ul');
 var inputElement = document.querySelector('input')
 
@@ -36,13 +38,39 @@ function renderRepositories(repositories){
     }
 }
 
+function renderLoading(loading) {
+    listElement.innerHTML = "";
+
+    var textElement = document.createTextNode('Carregando...');
+    var loadingElement = document.createElement('li');
+
+    loadingElement.appendChild(textElement);
+    listElement.appendChild(loadingElement);
+}
+
+function renderError(loading) {
+    listElement.innerHTML = "";
+
+    var textElement = document.createTextNode('Erro!');
+    var errorElement = document.createElement('li');
+
+    errorElement.style.color = "#F00";
+
+    errorElement.appendChild(textElement);
+    listElement.appendChild(errorElement);
+}
+
 function listRepositories(){
     var user = inputElement.value;
 
     if(!user) return;
 
+    renderLoading();
+
     axios.get(`https://api.github.com/users/${user}/repos`)
         .then(function(response) {
             renderRepositories(response.data)
+        }).catch(function () {
+            renderError();
         })
 }
